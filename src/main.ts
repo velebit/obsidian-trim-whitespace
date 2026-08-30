@@ -159,6 +159,8 @@ export default class TrimWhitespace extends Plugin {
 
 	/**
 	 * Trims whitespace in selected text
+	 *
+	 * @param causedBy What triggered the trim
 	 */
 	trimSelection(causedBy: TrimTrigger): void {
 		const editor = this._getEditor();
@@ -196,6 +198,8 @@ export default class TrimWhitespace extends Plugin {
 
 	/**
 	 * Trims whitespace in document
+	 *
+	 * @param causedBy What triggered the trim
 	 */
 	trimDocument(causedBy: TrimTrigger): void {
 		const editor = this._getEditor();
@@ -238,7 +242,7 @@ export default class TrimWhitespace extends Plugin {
 			);
 			const textBeforeCursorTrimmed = handleTextTrim(
 				textBeforeCursor,
-				this.settings,
+				{ ...this.settings, TrimTrailingLines: false },
 			);
 
 			// Get the active text, where the cursor is
@@ -251,7 +255,7 @@ export default class TrimWhitespace extends Plugin {
 			const textAfterCursor = input.slice(toCursorFenceIndices.end);
 			const textAfterCursorTrimmed = handleTextTrim(
 				textAfterCursor,
-				this.settings,
+				{ ...this.settings, TrimLeadingLines: false },
 			);
 
 			// Concatenate the trimmed and current text blocks
@@ -274,15 +278,15 @@ export default class TrimWhitespace extends Plugin {
 			const fromBeforeText = input.slice(0, fromCursorOffset);
 			const fromBeforeTrimmed = handleTextTrim(
 				fromBeforeText,
-				this.settings,
+				{ ...this.settings, TrimTrailingLines: false },
 			);
 
 			const toBeforeText = input.slice(0, toCursorOffset);
 			const toBeforeTrimmed = handleTextTrim(toBeforeText, this.settings);
 
 			// Calculate new selection offsets
-			newFromCursorOffset = fromBeforeTrimmed.length;
 			newToCursorOffset = toBeforeTrimmed.length;
+			newFromCursorOffset = Math.min(fromBeforeTrimmed.length, newToCursorOffset);
 		}
 
 		// Only process if text is different
