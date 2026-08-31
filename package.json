@@ -7,7 +7,7 @@
 		"dev": "yarn set-versions && obsidian-plugin dev src/main.ts",
 		"build": "yarn set-versions && obsidian-plugin build src/main.ts",
 		"watchTest": "yarn run jest --watchAll",
-		"test": "yarn run jest",
+		"test": "yarn run jest --verbose",
 		"set-versions": "node scripts/set-versions.mjs",
 		"lint": "eslint src"
 	},
